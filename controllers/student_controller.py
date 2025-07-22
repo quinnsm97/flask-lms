@@ -67,13 +67,28 @@ def create_a_student():
         # Return
         return jsonify(student_schema.dump(new_student)), 201
     except IntegrityError as err:
-        if (err.orig.pgcode) == errorcodes.NOT_NULL_VIOLATION:
-            return {"message": f"Required field {err.orig.diag.column_name} cannot be null."}
+        if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
+            return {"message": f"Required field {err.orig.diag.column_name} cannot be null."}, 400
         
-        if (err.orig.pgcode) == errorcodes.UNIQUE_VIOLATION:
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
             return {"message": "Email has to be unique"}, 400
         else:
             return {"message": "Unexpected error occured."}, 400
 
-# PUT/PATCH /id
 # DELETE /id
+@student_bp.route("/<int:student_id>", methods=["DELETE"])
+def delete_student(student_id):
+    # Find the student with the student_id
+    stmt = db.select(Student).where(Student.id == student_id)
+    student = db.session.scalar(stmt)
+    # if exists
+    if student:
+        # delete the student entry
+        db.session.delete(student)
+        db.session.commit()
+
+        return{"message": f"student '{student.name}' has been removed successfully"}, 200
+    # else:
+    else:
+        # return an acknowledgement message
+        return {"message": f"Student with id '{student_id} does not exist"}, 404
