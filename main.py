@@ -1,4 +1,6 @@
 from flask import Flask
+from controllers.cli_controller import db_commands
+from controllers.student_controller import student_bp
 
 from init import db
 import os
@@ -10,5 +12,9 @@ def create_app():
 
     db.init_app(app)
 
+    app.register_blueprint(db_commands)
+    app.register_blueprint(student_bp)
+
     return app
+
 
