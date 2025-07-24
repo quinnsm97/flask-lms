@@ -4,6 +4,8 @@
 - Courses
 - Enrolments (junction table)
 
+## Setup
+
 To run the server successfully, here are the steps you need to perform:
 - create a .env file with the variables included in .env.example
 	- DATABASE_URI with a connection string to your chosen database, e.g. postgres
@@ -42,3 +44,17 @@ To run the server successfully, here are the steps you need to perform:
 	- run the commands needed to drop tables, create tables, and then seed those created tables
 
 - flask run to run the server
+
+- OPTIONAL: set flask debug and a manual PORT value into `.flaskenv`:
+	- `FLASK_DEBUG=1`
+	- `FLASK_RUN_PORT=8080`
+
+## API Endpoints
+
+Endpoint                  Methods     Rule                      
+------------------------  ----------  --------------------------
+student.create_a_student  POST        /students/                
+student.delete_student    DELETE      /students/<int:student_id>
+student.get_a_student     GET         /students/<int:student_id>
+student.get_students      GET         /students/                
+student.update_student    PATCH, PUT  /students/<int:student_id>
